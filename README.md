@@ -11,19 +11,51 @@ Escenario -> Tipo de Vulnerabilidad -> Máquinas
 
 ---
 
-# 🌐 Ataques a aplicaciones web
+## 🔎 Salto rápido
+- [Ataques a aplicaciones web](#ataques-a-aplicaciones-web)
+- [Escalada de privilegios](#escalada-de-privilegios)
+- [Active Directory](#active-directory)
+- [Criptografía](#criptografía)
 
-# 🐧 Escalada de privilegios
+---
 
-# 🏢 Active Directory
+## Ataques a aplicaciones web
 
-# 🔐 Criptografía
+### Inyección
+- SQL Injection
+  - [Puzzle (DockerLabs)](https://youtu.be/pRS9fz8IHfc?si=HZUYkRMfNeI1L6PG)
+- Command Injection
+  
+### Autenticación y control de acceso
+- IDOR
+- Broken Access Control
+  
+### Ataques del lado del cliente
+- Stored XSS
+- Reflected XSS
+
+## Escalada de privilegios
+
+### Linux
+- SUID Abuse
+- Cron Job Abuse
+
+### Windows
+- Unquoted Service Path
+- Token Impersonation
+
+## Active Directory
+- Kerberoasting
+- AS-REP Roasting
+
+## Criptografía
+- Weak RSA
+- ECB Mode Leakage
 
 ---
 
 ## Estructura del Informe
-
-Cada informe de depuración incluye:
+Cada informe incluye:
 - Metodología de reconocimiento
 - Estrategia de enumeración
 - Ruta de explotación
@@ -37,3 +69,6 @@ Este repositorio sirve como:
 - Un archivo categorizado de escenarios de ataques reales
 - Un sistema de referencia para patrones de vulnerabilidad
 - Una base para la automatización y la indexación de búsquedas futuras
+
+## 📊 Estadísticas
+- Web: 0 máquinas
