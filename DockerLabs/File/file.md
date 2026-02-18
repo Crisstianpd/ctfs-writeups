@@ -1,6 +1,54 @@
-![image](imgs/file-banner.png)
+<!--
+machine: Cracker
+platform: DockerLabs
+author: Scuffito & Jul3n-dot
+difficulty: Easy
+os: Linux
+ip: 172.17.0.2
 
->[Maquina](https://mega.nz/file/yAUAGKbJ#yDt6iFURxBS-0ZZinTSXuNPM0HtOfkxvOTqXAw63lp8)   \   [Dockerlabs](https://dockerlabs.es/)
+skills:
+- Insecure File Upload
+- Remote Code Execution (RCE)
+- Hash Cracking
+- Brute Force Attack
+- Sudo Misconfiguration
+- Arbitrary File Overwrite
+-->
+
+<div align="center">
+
+# File - DockerLabs
+**Información General**
+  
+|  |  |
+|---|---|
+| **Máquina** | [File](https://mega.nz/file/yAUAGKbJ#yDt6iFURxBS-0ZZinTSXuNPM0HtOfkxvOTqXAw63lp8) |
+| **Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
+| **Autor** | Scuffito & Jul3n-dot |
+| **Dificultad** | `Fácil` |
+| **Sistema Operativo** | `Linux` |
+| **IP** | `172.17.0.2` |
+|  |  |
+
+</div>
+
+>**Skills**:
+>- Insecure File Upload -> Remote Code Execution (RCE)
+>- Hash Cracking
+>- Brute Force Attack
+>- Sudo Misconfiguration
+>- Arbitrary File Overwrite
+
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeración de los Servicios](#enumeracion-de-los-servicios)
+- [Cracking de Hash](#cracking-de-hash)
+- [Enumeración Web](#enumeracion-web)
+- [Explotación](#explotacion)
+- [Obtención de Reverse Shell](#obtencion-de-reverse-shell)
+- [Escalada de Privilegios](#escalada-de-privilegios)
+- [Fuerza Bruta de Credenciales y Movimiento Lateral entre Usuarios](#fuerza-bruta-de-credenciales-y-movimiento-lateral-entre-usuarios)
+- [Abusando de Permisos de Archivos y Acceso Root](#abusando-de-permisos-de-archivos-y-acceso-root)
 
 
 ## Reconocimiento
@@ -17,7 +65,9 @@ Ahora efectuamos un segundo escaneo con `nmap` para reconocer y determinar versi
 
 Podemos ver en los resultados que en el puerto `21`(*ftp*), tenemos acceso como *anonymous* a un archivo *anon.txt*.
 
-Por otro lado, si revisamos el puerto `80` en el navegador, solo observamos una web que viene por defecto en los sistemas, nada interesante, hasta que revisamos el codigo fuente.
+## Enumeracion de los Servicios
+
+Si revisamos el puerto `80` en el navegador, solo observamos una web que viene por defecto en los sistemas, nada interesante, hasta que revisamos el codigo fuente.
 
 ![image](imgs/file-img3.png)
 
@@ -31,7 +81,9 @@ Bajamos el archivo *anon.txt*.
 
 Dentro del archivo hay una cadena de numeros y algunas letras(muy similar a un **hash**).
 
-con `hashid` intento determinar si es un hash y que tipo de hash es.
+## Cracking de Hash
+
+Con `hashid` determinamos si es un hash y que tipo de hash es.
 
 ![image](imgs/file-img6.png)
 
@@ -41,16 +93,17 @@ Al intentar romper el hash con `john` indicandole que es un hash md5, nos da el 
 
 ![image](imgs/file-img7.png)
 
-justin?. Posiblemente sea algun usuario o no lo se pero si recordamos el comentario de la web, nos hablaba sobre un directorio asi que, es hora de hacer un poco de fuzzing con `gobuster`.
+*justin*?. Posiblemente sea algun usuario o no lo se pero si recordamos el comentario de la web, nos hablaba sobre un directorio asi que, es hora de hacer un poco de fuzzing con `gobuster`.
 
 ![image](imgs/file-img8.png)
+
+## Enumeracion Web
 
 `gobuster` nos encuntra un directorio **uploads** y un archivo *php* llamado **file_upload.php**. Si nos dirijimos a la ruta del archivo *php* podremos ver que tenemos la posibilidad de subir archivos a la maquina, y los cuales, parece que seran almacenados en la carpeta **uploads**.
 
 ![image](imgs/file-img9.png)
 
 Podemos intentar subir un archivo malicioso con el cual podremos ejecutar comandos dentro de la maquina.
-
 
 ## Explotacion
 Despues de intentar de varias maneras el subir un archivo malicioso, he logrado colar un archivo *php* bajo la extension de archivo ***.phar***, que es otra extension de archivo referente a un archivo *php*. En este archivo lo que hacemos es crear una variable llamada `cmd` a la cual le podremos pasar como valor algun comando y que este sea ejecutado a nivel de sistema y que, el resultado del comando, nos lo muestre en la web.
@@ -71,6 +124,7 @@ Ahora nos dirijimos hacia la ruta de nuestro archivo dentro del servidor y hacem
 
 Esto tambien nos indica de que podriamos intentar entablar una revershell hasia nuestra maquina atacante atravez de nuestro archivo *.phar*.
 
+## Obtencion de Reverse Shell
 Nos ponemos en escucha con `netcat` por el puerto **443** y le pasamos a la variable `cmd` lo necesario para enviar la conexion a nuestra maquina atacante por el mismo puerto de escucha que `netcat` y enviamos la solicitud.
 
 ![image](imgs/file-img14.png)
@@ -83,6 +137,8 @@ Estamos dentro.
 Despues de intentar de varias maneras para poder escalar mis privilegios sin nigun exito, me decidi por usar fuerza bruta para poder ganar acceso como alguno de los usuarios que estaban dentro de la maquina los cuales se encuentran en el `/etc/passwd`.
 
 ![image](imgs/file-img16.png)
+
+## Fuerza Bruta de Credenciales y Movimiento Lateral entre Usuarios
 
 Despues de crear el script con el cual llevaria acabo el ataque([ver script](https://github.com/Crisstianpdx/Su-Force)), lo movi junto con el diccionario *rockyou.txt* hasia la maquina victima.
 Me fui directo a usarla sobre el usuario *mario* y al parecer me encontro la contraseña.
@@ -103,19 +159,21 @@ Ahora ganamos una shell como el usuario **julen** y si vemos que comandos podemo
 
 ![image](imgs/file-img21.png)
 
-Al ganar una shell como el usuario *iker*, al cual tambien le revisamos los comandos que puede ejecutar con privilegios nos encontramos con que puede ejcutar como cualquier usuario un script python llamado *geo_ip.py* ubicado en su directorio de usuario(*/home/iker*) por lo que ahora solo nos queda abusar de este permiso en ese archivo.
+## Abusando de Permisos de Archivos y Acceso Root
 
-Viendo la ruta */home/iker/* para posibles vectores de explotacion me encontre con otro directorio llamado *\__pycache__* que contenia un archivo *.pyc* con el que poco se me ocurrio que hacer.
+Al ganar una shell como el usuario *iker*, al cual tambien le revisamos los comandos que puede ejecutar con privilegios nos encontramos con que puede ejcutar como cualquier usuario un script python llamado *geo_ip.py* ubicado en su directorio de usuario(*/home/iker*).
 
 ![image](imgs/file-img22.png)
 
-Despues de pensar un poco decido intentar reemplazar el script *geo_ip.py* por mi script *geo_ip.py.1* que contendra las instrucciones necesarias para ejecutarme una /bin/bash como **root**.
+Si revisamos los permisos del script con `ls -la`, este archivo pertenece al usuario `root`, pero se encuentra ubicado en el directorio de trabajo de nuestro usuario actual por lo que simple y sencillamente, podriamos modificar el contenido del archivo para que este nos ejecute una shell con altos privilegios.
+
+Reemplazamos el script *geo_ip.py* por mi script *geo_ip.py.1* que contendra las instrucciones necesarias para ejecutar una /bin/bash como `root`.
 
 ![image](imgs/file-img23.png)
 
 ![image](imgs/file-img24.png)
 
-Esto solo consistiria en renombrar los archivos. Renombrar *geo_ip.py* a cualquier otro nombre y mi archivo *geo_ip.py.1* renombrarlo con el nombre *geo_ip.py*(solo quitando el *.1*), de esta forma se ejecutarian mis instrucciones con altos privilegios y ganaria una shell como **root**.
+Renombramos el *geo_ip.py* original a cualquier otro nombre y mi archivo *geo_ip.py.1* renombrarlo con el nombre *geo_ip.py*(solo quitando el *.1*), de esta forma se ejecutarian mis instrucciones con altos privilegios y ganaria una shell como **root**.
 
 ![image](imgs/file-img25.png)
 
