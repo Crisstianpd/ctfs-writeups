@@ -1,6 +1,46 @@
-![image](imgs/crk-banner.png)
+<!--
+machine: Cracker
+platform: DockerLabs
+author: d1se0
+difficulty: Medium
+os: Linux
+ip: 172.17.0.2
 
->[Maquina](https://mega.nz/file/iJ1UzQ5C#t8zsjmsyIB6dIFndUVc6qrvZOOh2cevCDNvEgUOELWs)   \   [Dockerlabs](https://dockerlabs.es/)
+skills:
+- DNS Manipulation
+- Subdomain Enumeration
+- Binary Analysis
+- Hardcoded Credentials
+- SSH Access
+- Password Reuse
+-->
+
+# Cracker - DockerLabs
+**Información General**
+|  |  |
+|---|---|
+| **Máquina** | [Cracker](https://mega.nz/file/iJ1UzQ5C#t8zsjmsyIB6dIFndUVc6qrvZOOh2cevCDNvEgUOELWs) |
+| **Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
+| **Autor** | d1se0 |
+| **Dificultad** | `Medio` |
+| **Sistema Operativo** | `Linux` |
+| **IP** | `172.17.0.2` |
+|  |  |
+
+**Skills**:
+- DNS Manipulation
+- Subdomain Enumeration
+- Binary Analysis
+- Hardcoded Credentials
+- SSH Access
+- Password Reuse
+
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeración Web](#enumeracion-web)
+- [Análisis del Binario](#analisis-del-binario)
+- [Acceso SSH](#acceso-ssh)
+- [Escalada de Privilegios](#escalada-de-privilegios)
 
 ## Reconocimiento
 
@@ -29,6 +69,8 @@ Al contemplarlo en el */etc/hosts*, se nos mostrara una web completamente difere
 
 ![image](imgs/crk-1-6.png)
 
+## Enumeracion Web
+
 En la web no hay nada de que abusar, ni usando fuzzing podemos encontrar algo interesante asi que pasamos a buscar posibles subdominios con ayuda de `wfuzz`.
 
 ![image](imgs/crk-1-7.png)
@@ -41,13 +83,11 @@ Dentro de la pagina vemos que nos piden la introduccion de un SERIAL para accede
 
 Al igual que la web anterior no hay nada interesante, ni usando fuzzing encontramos algo asi que, nos quedaremos solo con el analisis del software que acabamos de descargar.
 
+## Analisis del Binario
+
 Al ejecutar el programa es de esperarnos que nos pida el SERIAL o una contraseña. Y efectivamente.
 
 ![image](imgs/crk-1-9.png)
-
-Pero hay cosas que debemos tomar encueta.
-
-## Explotacion
 
 Podriamos leer o descomponer el programa/software en busca de alguna credencial que no este bien guardada o encriptada dentro del programa ya que, de algun lugar tiene que verificar el valor que ingresemos como SERIAL por lo que probablemete este almacenado ahi dentro.
 
@@ -69,12 +109,13 @@ Una vez dentro, se nos permite ver una contraseña super secreta por lo que la l
 
 Esta contraseña es muy probable que sea para podernos conectar via **ssh** por lo que la podemos probar.
 
+## Acceso SSH
+
 Despues de probar un poco, hemos logrado entrar como el usuario *cracker*.
 
 ![image](imgs/crk-2-6.png)
 
 > la contraseña lleva un cero, no una "o", por ese despiste perdi tiempo.
-
 
 ## Escalada de Privilegios
 
