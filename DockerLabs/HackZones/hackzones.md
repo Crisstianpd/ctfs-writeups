@@ -18,6 +18,8 @@ skills:
 - Sensitive File Enumeration
 -->
 
+<div align="center">
+
 # HackZones - DockerLabs
 **Información General**
 |  |  |
@@ -30,14 +32,16 @@ skills:
 | **IP** | `172.17.0.2` |
 |  |  |
 
-**Skills**:
-- DNS Manipulation
-- Insecure Direct Object Reference (IDOR)
-- Insecure File Upload -> Remote Code Execution (RCE)
-- Local Script Analysis -> Credential Extraction
-- SSH Lateral Movement
-- Sudo Misconfiguration
-- Sensitive File Enumeration
+</div>
+
+>**Skills**:
+>- DNS Manipulation
+>- Insecure Direct Object Reference (IDOR)
+>- Insecure File Upload -> Remote Code Execution (RCE)
+>- Local Script Analysis -> Credential Extraction
+>- SSH Lateral Movement
+>- Sudo Misconfiguration
+>- Sensitive File Enumeration
 
 **Etapas:**
 - [Reconocimiento](#reconocimiento)
