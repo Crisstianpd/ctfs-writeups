@@ -30,9 +30,7 @@ skills:
 **Skills**:
 - DNS Manipulation
 - Subdomain Enumeration
-- Binary Analysis
-- Hardcoded Credentials
-- SSH Access
+- Binary Analysis -> Hardcoded Credentials -> SSH Access
 - Password Reuse
 
 **Etapas:**
