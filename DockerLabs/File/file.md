@@ -48,7 +48,7 @@ skills:
 - [Obtención de Reverse Shell](#obtencion-de-reverse-shell)
 - [Escalada de Privilegios](#escalada-de-privilegios)
 - [Fuerza Bruta de Credenciales y Movimiento Lateral entre Usuarios](#fuerza-bruta-de-credenciales-y-movimiento-lateral-entre-usuarios)
-- [Abusando de Permiso de Archivo y Acceso Root](#abusando-de-permiso-de-archivo-y-acceso-root)
+- [Abusando de Permiso de Archivo y Posterior Acceso Root](#abusando-de-permiso-de-archivo-y-posterior-acceso-root)
 
 
 ## Reconocimiento
@@ -159,7 +159,7 @@ Ahora ganamos una shell como el usuario **julen** y si vemos que comandos podemo
 
 ![image](imgs/file-img21.png)
 
-## Abusando de Permiso de Archivo y Acceso Root
+## Abusando de Permiso de Archivo y Posterior Acceso Root
 
 Al ganar una shell como el usuario *iker*, al cual tambien le revisamos los comandos que puede ejecutar con privilegios nos encontramos con que puede ejcutar como cualquier usuario un script python llamado *geo_ip.py* ubicado en su directorio de usuario(*/home/iker*).
 
