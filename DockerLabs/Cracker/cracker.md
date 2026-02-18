@@ -15,8 +15,11 @@ skills:
 - Password Reuse
 -->
 
+<div align="center">
+
 # Cracker - DockerLabs
 **Información General**
+  
 |  |  |
 |---|---|
 | **Máquina** | [Cracker](https://mega.nz/file/iJ1UzQ5C#t8zsjmsyIB6dIFndUVc6qrvZOOh2cevCDNvEgUOELWs) |
@@ -27,11 +30,13 @@ skills:
 | **IP** | `172.17.0.2` |
 |  |  |
 
-**Skills**:
-- DNS Manipulation
-- Subdomain Enumeration
-- Binary Analysis -> Hardcoded Credentials -> SSH Access
-- Password Reuse
+</div>
+
+>**Skills**:
+>- DNS Manipulation
+>- Subdomain Enumeration
+>- Binary Analysis -> Hardcoded Credentials -> SSH Access
+>- Password Reuse
 
 **Etapas:**
 - [Reconocimiento](#reconocimiento)
