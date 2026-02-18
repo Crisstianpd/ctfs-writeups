@@ -12,6 +12,8 @@ skills:
 - Sudo Misconfiguration
 -->
 
+<div align="center">
+
 # Upload - DockerLabs
 **Información General**
 |  |  |
@@ -24,9 +26,11 @@ skills:
 | **IP** | `172.17.0.2` |
 |  |  |
 
-**Skills**:
-- Insecure File Upload -> Remote Code Execution (RCE)
-- Sudo Misconfiguration
+</div>
+
+>**Skills**:
+>- Insecure File Upload -> Remote Code Execution (RCE)
+>- Sudo Misconfiguration
 
 **Etapas:**
 - [Reconocimiento](#reconocimiento)
