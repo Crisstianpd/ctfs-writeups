@@ -1,34 +1,53 @@
+<!--
+machine: HackZones
+platform: DockerLabs
+author: d1se0
+difficulty: Medium
+os: Linux
+ip: 172.17.0.2
+
+skills:
+- DNS Manipulation
+- Insecure Direct Object Reference (IDOR)
+- Insecure File Upload
+- Remote Code Execution (RCE)
+- Local Script Analysis
+- Credential Extraction
+- SSH Lateral Movement
+- Sudo Misconfiguration
+- Sensitive File Enumeration
+-->
+
 # HackZones - DockerLabs
 **Información General**
 |  |  |
 |---|---|
-| **🖥️ Máquina** | [HackZones](https://mega.nz/file/CdFVBKgb#fYIZ1IRaYjzVjrjmGOzODDquAul8U-wiFpy8Bu2vBA4) |
-| **🌐 Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
-| **👨‍💻 Autor** | d1se0 |
-| **🎯 Dificultad** | `Medio` |
-| **🐧 Sistema Operativo** | `Linux` |
-| **📡 IP** | `172.17.0.2` |
+| **Máquina** | [HackZones](https://mega.nz/file/CdFVBKgb#fYIZ1IRaYjzVjrjmGOzODDquAul8U-wiFpy8Bu2vBA4) |
+| **Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
+| **Autor** | d1se0 |
+| **Dificultad** | `Medio` |
+| **Sistema Operativo** | `Linux` |
+| **IP** | `172.17.0.2` |
 |  |  |
 
 **Skills**:
-- Manipulación de resolución DNS (`/etc/hosts`)
+- DNS Manipulation
 - Insecure Direct Object Reference (IDOR)
 - Insecure File Upload -> Remote Code Execution (RCE)
-- Análisis de scripts locales -> Exposición de credenciales en archivos
-- Movimiento lateral vía SSH
-- SUDO Missconfiguration
-- Enumeración y análisis de archivos sensibles
+- Local Script Analysis -> Credential Extraction
+- SSH Lateral Movement
+- Sudo Misconfiguration
+- Sensitive File Enumeration
 
 **Etapas:**
 - [Reconocimiento](#reconocimiento)
-- [Enumeración Web](#enumeración-web)
+- [Enumeración Web](#enumeracion-web)
 - [Explotación](#explotacion)
-- [Obtención de Reverse Shell](#obtención-de-reverse-shell)
+- [Obtención de Reverse Shell](#obtencion-de-reverse-shell)
 - [Escalada de Privilegios](#escalada-de-privilegios)
 - [Movimiento Lateral](#movimiento-lateral)
 - [Abuso de Sudo](#abuso-de-sudo)
 - [Acceso Root](#acceso-root)
-- [Conclusiones](#conclusiones)
 
 ## Reconocimiento
 
@@ -61,7 +80,7 @@ Se agrega la entrada correspondiente en `/etc/hosts`:
 
 Tras esto, el contenido web cambia completamente, revelando un panel de autenticación.
 
-## Enumeración Web
+## Enumeracion Web
 
 Se realiza fuzzing de directorios utilizando `gobuster` y se logran identificar recursos relevantes:
 - `/dashboard.html`
@@ -101,7 +120,7 @@ Se obtiene ejecución remota de comandos, confirmando una vulnerabilidad de Remo
 
 ![image](imgs/hz-img13.png)
 
-## Obtención de Reverse Shell
+## Obtencion de Reverse Shell
 
 Se establece un listener en la máquina atacante:
 ```bash
@@ -196,13 +215,3 @@ Se utiliza la credencial descubierta para cambiar al usuario root:
 ![image](imgs/hz-img30.png)
 
 Bueno, qué les digo.
-
-### Conclusiones
-La máquina presenta múltiples fallos de seguridad encadenados:
-- Resolución DNS no configurada correctamente.
-- Insecure Direct Object Reference (IDOR)
-- Subida insegura de archivos que derivan en RCE.
-- Exposición de credenciales mediante scripts.
-- Configuración incorrecta de permisos sudo.
-- La combinación de estas vulnerabilidades permite comprometer completamente el sistema.
-
