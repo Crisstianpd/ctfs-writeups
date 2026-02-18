@@ -100,23 +100,21 @@ Al inspeccionar dashboard.html, se detecta una funcionalidad que permite subir u
 
 No se observan controles aparentes de validación del tipo de archivo, lo que sugiere una posible vulnerabilidad de subida insegura de archivos.
 
-Se crea un archivo PHP con capacidad de ejecutar comandos:
+Se crea un archivo PHP con capacidad de ejecutar comandos atravez del parametro `cmd`:
 
 ![image](imgs/hz-img10.png)
 
 ![image](imgs/hz-img11.png)
 
-Bueno, parece que no hubo problemas.
-
 ![image](imgs/hz-img12.png)
 
-El archivo es subido exitosamente al servidor sin restricciones.
+El archivo es subido exitosamente al servidor sin restricciones, y este lo podemos encontrar en el directorio `/uploads/`.
 
-Al acceder al recurso desde:
+Al acceder a nuestro archivo haciendo un llamado al parametro `cmd` con el comando `whoami`:
 ```bash
 http://hackzones.hl/uploads/shell.php?cmd=whoami
 ```
-Se obtiene ejecución remota de comandos, confirmando una vulnerabilidad de Remote Code Execution (RCE).
+Se obtiene el output de dicho comando, confirmando asi una vulnerabilidad de Remote Code Execution (RCE).
 
 ![image](imgs/hz-img13.png)
 
@@ -188,9 +186,9 @@ Procedemos a revisar a los permisos para el usuario `mrrobot`
 
 ![image](imgs/hz-img26.png)
 
-Se identifica que el usuario puede ejecutar el comando cat como cualquier usuario sin necesidad de contraseña.
+Se identifica que el usuario puede ejecutar el comando `cat` como cualquier usuario sin necesidad de contraseña.
 
-Esto representa una mala configuración crítica.
+Esto representa una configuración crítica.
 
 Se inspecciona el directorio `/opt` y se encuentra el archivo:
 ```bash
