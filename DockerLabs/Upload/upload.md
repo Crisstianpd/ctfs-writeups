@@ -1,7 +1,38 @@
-![image](imgs/upload-banner.png)
+<!--
+machine: Upload
+platform: DockerLabs
+author: El Pinguino de Mario
+difficulty: Easy
+os: Linux
+ip: 172.17.0.2
 
->[Maquina](https://mega.nz/file/pOdwgYbB#8lTyf-mWFNq7xvKWObKUV9gkrZj3nzhuHVlGQmnZ6BQ)   \   [Dockerlabs](https://dockerlabs.es/)
+skills:
+- Insecure File Upload
+- Remote Code Execution (RCE)
+- Sudo Misconfiguration
+-->
 
+# Upload - DockerLabs
+**Información General**
+|  |  |
+|---|---|
+| **Máquina** | [Upload](https://mega.nz/file/pOdwgYbB#8lTyf-mWFNq7xvKWObKUV9gkrZj3nzhuHVlGQmnZ6BQ) |
+| **Plataforma** | [Dockerlabs](https://dockerlabs.es/) |
+| **Autor** | El Pinguino de Mario |
+| **Dificultad** | `Fácil` |
+| **Sistema Operativo** | `Linux` |
+| **IP** | `172.17.0.2` |
+|  |  |
+
+**Skills**:
+- Insecure File Upload -> Remote Code Execution (RCE)
+- Sudo Misconfiguration
+
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeración Web y Explotación](#enumeracion-web-y-explotacion)
+- [Obtención de Reverse Shell](#obtencion-de-reverse-shell)
+- [Escalada de Privilegios](#escalada-de-privilegios)
 
 ## Reconocimiento
 
@@ -28,6 +59,8 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.52 (Ubuntu)
 ```
 En los resultados del escaneo podemos ver que dentro del **puerto 80** se aloja una pagina web que, tal parece, nos deja subir archivos al servidor.
+
+## Enumeracion Web y Explotacion
 
 Visualizamos la pagina web.
 
@@ -77,7 +110,7 @@ http://172.17.0.2/uploads/test.php?cmd=id
 ![image](imgs/upload-img3.png)
 Al hacer esto podremos observar la respuesta del servidor ante el comando `id` por lo que el archivo funciona y el servidor interpreta de forma correcta las peticiones hechas atraves del archivo php. Sabiendo esto, podemos intentar entablar una revershell del servidor a nuestra maquina atacante. 
 
-## Explotacion
+## Obtencion de Reverse Shell
 
 Nos colocamos en escucha con `netcat` por el **puerto 443** en espera de la conexion.
 ```shell
