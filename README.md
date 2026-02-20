@@ -1,6 +1,7 @@
 # Informes de Seguridad Ofensiva (CTFs)
 Este repositorio contiene writeups técnicos y estructurados de máquinas y laboratorios de las siguientes plataformas:
 - [DockerLabs](/DockerLabs)
+- [VulNyx](/VulNyx)
 
 El objetivo principal es documentar de forma clara y profesional cada proceso de explotación, no solo como registro personal, sino también como material de apoyo para otras personas que estén aprendiendo o reforzando conocimientos en seguridad ofensiva.
 

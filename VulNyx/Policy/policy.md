@@ -33,7 +33,7 @@ skills:
 
 </div>
 
-> **Skills**:
+>**Skills:**
 > - Directory Fuzzing
 > - Encrypted Archive Cracking
 > - Group Policy Preferences (GPP) Abuse  
@@ -142,7 +142,7 @@ De hecho, en el primer escaneo que hicimo tambien nos indicaba la existencia del
 
 ![img](./imgs/12.png)
 
-Procedemos a comprobar conectividad con `winrm` bajo las credenciales previamente obtenidas e indicando la ejecucion del comando *`whoami`*.
+Procedemos a comprobar conectividad con `winrm` bajo las credenciales previamente obtenidas e indicando la ejecucion del comando *`pwd`*.
 ```bash
 netexec winrm 10.10.2.5 -u XEROSEC -p 'GPP2k26blahblah' -x pwd
 ```
@@ -177,7 +177,6 @@ evil-winrm -i 10.10.2.5 -u administrator -p 'GigaAdmin123!'
 ...
 
 ![img](./imgs/16-2.png)
-
 
 Ahora ya somos administradores del sistema.
 Pwned!
