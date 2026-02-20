@@ -41,13 +41,13 @@ skills:
 > - Environment Variable Enumeration  
 > - Credential Reuse  
 
->**Etapas:**
->- [Reconocimiento](#reconocimiento)
->- [Enumeracion Web](#enumeracion-web)
->- [Cracking de Archivo Comprimido](#cracking-de-archivo-comprimido)
->- [Abuso de Group Policy Preferences](#abuso-de-group-policy-preferences)
->- [Acceso a Shell via WinRM](#acceso-a-shell-via-winrm)
->- [Escalada de Privilegios](#escalada-de-privilegios)
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeracion Web](#enumeracion-web)
+- [Cracking de Archivo Comprimido](#cracking-de-archivo-comprimido)
+- [Abuso de Group Policy Preferences](#abuso-de-group-policy-preferences)
+- [Acceso a Shell via WinRM](#acceso-a-shell-via-winrm)
+- [Escalada de Privilegios](#escalada-de-privilegios)
 
 ## Reconocimiento
 
