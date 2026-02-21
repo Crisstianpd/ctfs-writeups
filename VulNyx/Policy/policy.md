@@ -179,4 +179,5 @@ evil-winrm -i 10.10.2.5 -u administrator -p 'GigaAdmin123!'
 ![img](./imgs/16-2.png)
 
 Ahora ya somos administradores del sistema.
+
 Pwned!
