@@ -41,13 +41,13 @@ skills:
 > - Environment Variable Enumeration  
 > - Credential Reuse  
 
->**Etapas:**
->- [Reconocimiento](#reconocimiento)
->- [Enumeracion Web](#enumeracion-web)
->- [Cracking de Archivo Comprimido](#cracking-de-archivo-comprimido)
->- [Abuso de Group Policy Preferences](#abuso-de-group-policy-preferences)
->- [Acceso a Shell via WinRM](#acceso-a-shell-via-winrm)
->- [Escalada de Privilegios](#escalada-de-privilegios)
+**Etapas:**
+- [Reconocimiento](#reconocimiento)
+- [Enumeracion Web](#enumeracion-web)
+- [Cracking de Archivo Comprimido](#cracking-de-archivo-comprimido)
+- [Abuso de Group Policy Preferences](#abuso-de-group-policy-preferences)
+- [Acceso a Shell via WinRM](#acceso-a-shell-via-winrm)
+- [Escalada de Privilegios](#escalada-de-privilegios)
 
 ## Reconocimiento
 
@@ -179,5 +179,9 @@ evil-winrm -i 10.10.2.5 -u administrator -p 'GigaAdmin123!'
 ![img](./imgs/16-2.png)
 
 Ahora ya somos administradores del sistema.
+<<<<<<< HEAD
 
 Pwned!
+=======
+Pwned!
+>>>>>>> 16892dcaf7499daf7e99166798663581f3191049
