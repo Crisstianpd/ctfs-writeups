@@ -20,7 +20,7 @@ Todos los informes siguen una plantilla consistente que incluye:
 - Escalada de privilegios
 - Acceso root (si aplica)
 - Evidencias y análisis técnico
-- Diagramas cuando aportan claridad
+- Diagramas y esquemas en caso de ser necesario
 
 Actualmente no se mantiene una tabla de contenido manual en este documento, ya que el repositorio está orientado a la futura implementación de un buscador propio que permitirá filtrar máquinas por: *Nombre, Plataforma, Dificultad, Sistema operativo y Técnicas utilizadas (skills)*. Cada archivo incluye metadatos estructurados al inicio.
 
